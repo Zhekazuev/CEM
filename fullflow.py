@@ -76,7 +76,6 @@ def database():
                   port=config.port,
                   user=config.login,
                   password=config.password)
-
     query = ""
     df = pd.read_sql_query(query, con)
 
