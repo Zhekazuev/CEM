@@ -70,6 +70,7 @@ def database():
     data_start = input("Input Data start here:")
 
     print("Data finish format: 21-08-2020")
+    # check data finish
     data_start = input("Input Data finish here:")
 
     con = connect(host=config.host,
