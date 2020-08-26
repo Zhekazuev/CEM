@@ -10,8 +10,8 @@ def logic(df):
     sn_charging_action_by_protocol['UPLINK PLUS DOWNLINK'] = (
             df.groupby('P2P PROTOCOL')['BYTES DOWNLINK'].sum().div(1024 ** 2) +
             df.groupby('P2P PROTOCOL')['BYTES UPLINK'].sum().div(1024 ** 2))
-    print("Total statistics by Protocols:", sn_charging_action_by_protocol.sort_values(by='UPLINK PLUS DOWNLINK',
-                                                                                       ascending=False))
+    print("Total statistics by Protocols:\n", sn_charging_action_by_protocol.sort_values(by='UPLINK PLUS DOWNLINK',
+                                                                                         ascending=False))
 
     # charging action statistics
     sn_charging_action_by_rules = (df.groupby('SN CHARGING ACTION')[["BYTES DOWNLINK", "BYTES UPLINK"]].sum()
@@ -19,8 +19,8 @@ def logic(df):
     sn_charging_action_by_rules['UPLINK PLUS DOWNLINK'] = (
             df.groupby('SN CHARGING ACTION')['BYTES DOWNLINK'].sum().div(1024 ** 2) +
             df.groupby('SN CHARGING ACTION')['BYTES UPLINK'].sum().div(1024 ** 2))
-    print("Total statistics by Rules:", sn_charging_action_by_rules.sort_values(by='UPLINK PLUS DOWNLINK',
-                                                                                ascending=False))
+    print("Total statistics by Rules:\n", sn_charging_action_by_rules.sort_values(by='UPLINK PLUS DOWNLINK',
+                                                                                  ascending=False))
 
     # get all unique protocols
     protocols = df.get('P2P PROTOCOL').dropna().unique().tolist()
