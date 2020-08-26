@@ -32,7 +32,7 @@ def logic(df):
     df_1 = df[df['SN CHARGING ACTION'] != 'Social-net']
     df_2 = df_1[df_1['SERVER IP ADDRESS'].isin(instagram_addresses)]
     total_instagram_traffic = ((df_2.groupby('SN CHARGING ACTION')['BYTES DOWNLINK']).sum() +
-                               (df_2.groupby('SN CHARGING ACTION')['BYTES UPLINK']).sum())/1024 ** 2
+                               (df_2.groupby('SN CHARGING ACTION')['BYTES UPLINK']).sum())
 
     return f"Total instagram traffic for return to subscriber: {total_instagram_traffic} MB"
 

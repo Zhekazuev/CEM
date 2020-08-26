@@ -11,7 +11,7 @@ def logic(df):
             df.groupby('P2P PROTOCOL')['BYTES DOWNLINK'].sum().div(1024 ** 2) +
             df.groupby('P2P PROTOCOL')['BYTES UPLINK'].sum().div(1024 ** 2))
     print("Total statistics by Protocols:\n", sn_charging_action_by_protocol.sort_values(by='UPLINK PLUS DOWNLINK',
-                                                                                         ascending=False))
+                                                                                         ascending=False), end="\n")
 
     # charging action statistics
     sn_charging_action_by_rules = (df.groupby('SN CHARGING ACTION')[["BYTES DOWNLINK", "BYTES UPLINK"]].sum()
@@ -20,7 +20,7 @@ def logic(df):
             df.groupby('SN CHARGING ACTION')['BYTES DOWNLINK'].sum().div(1024 ** 2) +
             df.groupby('SN CHARGING ACTION')['BYTES UPLINK'].sum().div(1024 ** 2))
     print("Total statistics by Rules:\n", sn_charging_action_by_rules.sort_values(by='UPLINK PLUS DOWNLINK',
-                                                                                  ascending=False))
+                                                                                  ascending=False), end="\n")
 
     # get all unique protocols
     protocols = df.get('P2P PROTOCOL').dropna().unique().tolist()
@@ -43,7 +43,7 @@ def logic(df):
                        (df_ipstarts_1491['BYTES UPLINK'].sum())).sort_values(ascending=False).sum()/1024 ** 2
     total_telegram_traffic = traffic_ip_451 + traffic_ip_1965 + traffic_ip_1491
 
-    return f"Total instagram traffic for return to subscriber: {total_telegram_traffic} MB"
+    return f"Total Telegram traffic for return to subscriber: {total_telegram_traffic} MB"
 
 
 def database():
