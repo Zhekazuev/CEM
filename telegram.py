@@ -5,6 +5,28 @@ import sys
 
 
 def logic(df):
+    # protocol statistics
+    sn_charging_action_by_protocol = df.groupby('P2P PROTOCOL')[["BYTES DOWNLINK", "BYTES UPLINK"]].sum().div(1024 ** 2)
+    sn_charging_action_by_protocol['UPLINK PLUS DOWNLINK'] = (
+            df.groupby('P2P PROTOCOL')['BYTES DOWNLINK'].sum().div(1024 ** 2) +
+            df.groupby('P2P PROTOCOL')['BYTES UPLINK'].sum().div(1024 ** 2))
+    print("Total statistics by Protocols:", sn_charging_action_by_protocol.sort_values(by='UPLINK PLUS DOWNLINK',
+                                                                                       ascending=False))
+
+    # charging action statistics
+    sn_charging_action_by_rules = (df.groupby('SN CHARGING ACTION')[["BYTES DOWNLINK", "BYTES UPLINK"]].sum()
+                                   .div(1024 ** 2))
+    sn_charging_action_by_rules['UPLINK PLUS DOWNLINK'] = (
+            df.groupby('SN CHARGING ACTION')['BYTES DOWNLINK'].sum().div(1024 ** 2) +
+            df.groupby('SN CHARGING ACTION')['BYTES UPLINK'].sum().div(1024 ** 2))
+    print("Total statistics by Rules:", sn_charging_action_by_rules.sort_values(by='UPLINK PLUS DOWNLINK',
+                                                                                ascending=False))
+
+    # get all unique protocols
+    protocols = df.get('P2P PROTOCOL').dropna().unique().tolist()
+    # get all unique addresses
+    addresses = df.groupby('P2P PROTOCOL')['SERVER IP ADDRESS'].unique()
+
     # telegram
     no_messengers = df[df['SN CHARGING ACTION'] != 'Messengers']
     df_ipstarts_451 = (no_messengers[no_messengers['SERVER IP ADDRESS'].str.match('^45.1*') == True]
