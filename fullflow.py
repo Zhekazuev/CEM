@@ -57,7 +57,7 @@ def logic(df):
     # summary_youtube_traffic =
 
     total_traffic = total_telegram_traffic + total_instagram_traffic
-    return f"Total instagram traffic for return to subscriber: {total_traffic} MB"
+    return f"Total traffic for return to subscriber: {total_traffic} MB"
 
 
 def database():
