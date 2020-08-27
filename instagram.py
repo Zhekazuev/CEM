@@ -14,6 +14,7 @@ def instagram(df, instagram_addresses):
 
 
 def logic(df):
+    pd.options.display.max_rows = 100
     # statistics
     statistics = (df.groupby(['SN CHARGING ACTION', 'P2P PROTOCOL'])[["BYTES DOWNLINK", "BYTES UPLINK"]]
                   .sum().div(1024 ** 2))
