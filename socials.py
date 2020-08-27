@@ -16,15 +16,15 @@ def logic(df):
     # get all unique protocols
     protocols = df.get('P2P PROTOCOL').dropna().unique().tolist()
     # get all unique addresses
-    addresses = df.groupby('P2P PROTOCOL')['SERVER IP ADDRESS'].unique()
+    addresses = df.groupby('SN CHARGING ACTION')['SERVER IP ADDRESS'].unique()
 
     # messengers
-    instagram_addresses = addresses["Social-net"]
+    socials_addresses = addresses["Social-net"]
     df_1 = df[df['SN CHARGING ACTION'] == 'charge-10000']
-    df_2 = df_1[df_1['SERVER IP ADDRESS'].isin(instagram_addresses)]
+    df_2 = df_1[df_1['SERVER IP ADDRESS'].isin(socials_addresses)]
     total_socials_traffic = ((df_2.groupby('SN CHARGING ACTION')['BYTES DOWNLINK'].sum() +
                               df_2.groupby('SN CHARGING ACTION')['BYTES UPLINK'].sum())
-                              .sort_values(ascending=False).sum() / 1024 ** 2)
+                             .sort_values(ascending=False).sum() / 1024 ** 2)
 
     return f"Total Social-nets traffic for return to subscriber: {total_socials_traffic} MB"
 

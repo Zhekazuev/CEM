@@ -16,12 +16,12 @@ def logic(df):
     # get all unique protocols
     protocols = df.get('P2P PROTOCOL').dropna().unique().tolist()
     # get all unique addresses
-    addresses = df.groupby('P2P PROTOCOL')['SERVER IP ADDRESS'].unique()
+    addresses = df.groupby('SN CHARGING ACTION')['SERVER IP ADDRESS'].unique()
 
     # messengers
-    instagram_addresses = addresses["Messengers"]
+    messengers_addresses = addresses["Messengers"]
     df_1 = df[df['SN CHARGING ACTION'] == 'charge-10000']
-    df_2 = df_1[df_1['SERVER IP ADDRESS'].isin(instagram_addresses)]
+    df_2 = df_1[df_1['SERVER IP ADDRESS'].isin(messengers_addresses)]
     total_messengers_traffic = ((df_2.groupby('SN CHARGING ACTION')['BYTES DOWNLINK'].sum() +
                                 df_2.groupby('SN CHARGING ACTION')['BYTES UPLINK'].sum())
                                 .sort_values(ascending=False).sum() / 1024 ** 2)
