@@ -4,6 +4,15 @@ import config
 import sys
 
 
+def instagram(df, instagram_addresses):
+    df_1 = df[df['SN CHARGING ACTION'] != 'Social-net']
+    df_2 = df_1[df_1['SERVER IP ADDRESS'].isin(instagram_addresses)]
+    total_instagram_traffic = ((df_2.groupby('SN CHARGING ACTION')['BYTES DOWNLINK'].sum() +
+                                df_2.groupby('SN CHARGING ACTION')['BYTES UPLINK'].sum())
+                               .sort_values(ascending=False).sum() / 1024 ** 2)
+    return total_instagram_traffic
+
+
 def logic(df):
     # statistics
     statistics = (df.groupby(['SN CHARGING ACTION', 'P2P PROTOCOL'])[["BYTES DOWNLINK", "BYTES UPLINK"]]
@@ -17,16 +26,15 @@ def logic(df):
     protocols = df.get('P2P PROTOCOL').dropna().unique().tolist()
     # get all unique addresses
     addresses = df.groupby('P2P PROTOCOL')['SERVER IP ADDRESS'].unique()
+    try:
+        instagram_addresses = addresses["instagram"]
+    except KeyError as key_error:
+        return f"No Instagram in file. Total Instagram traffic for return to subscriber: 0 MB"
 
     # instagram
-    instagram_addresses = addresses["instagram"]
-    df_1 = df[df['SN CHARGING ACTION'] != 'Social-net']
-    df_2 = df_1[df_1['SERVER IP ADDRESS'].isin(instagram_addresses)]
-    total_instagram_traffic = ((df_2.groupby('SN CHARGING ACTION')['BYTES DOWNLINK'].sum() +
-                               df_2.groupby('SN CHARGING ACTION')['BYTES UPLINK'].sum())
-                               .sort_values(ascending=False).sum()/1024 ** 2)
+    total_instagram_traffic = instagram(df, instagram_addresses)
 
-    return f"Total instagram traffic for return to subscriber: {total_instagram_traffic} MB"
+    return f"Total Instagram traffic for return to subscriber: {total_instagram_traffic} MB"
 
 
 def database():
