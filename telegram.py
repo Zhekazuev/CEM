@@ -20,7 +20,7 @@ def logic(df):
     addresses = df.groupby('P2P PROTOCOL')['SERVER IP ADDRESS'].unique()
 
     # telegram
-    no_messengers = df[df['SN CHARGING ACTION'] != 'Messengers']
+    no_messengers = df[df['SN CHARGING ACTION'] == 'charge-10000']
     df_ipstarts_451 = (no_messengers[no_messengers['SERVER IP ADDRESS'].str.match('^45.1*') == True]
                        .groupby('SN CHARGING ACTION'))
     df_ipstarts_1965 = (no_messengers[no_messengers['SERVER IP ADDRESS'].str.match('^196.5*') == True]

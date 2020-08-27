@@ -5,7 +5,7 @@ import sys
 
 
 def instagram(df, instagram_addresses):
-    df_1 = df[df['SN CHARGING ACTION'] != 'Social-net']
+    df_1 = df[df['SN CHARGING ACTION'] == 'charge-10000']
     df_2 = df_1[df_1['SERVER IP ADDRESS'].isin(instagram_addresses)]
     total_instagram_traffic = ((df_2.groupby('SN CHARGING ACTION')['BYTES DOWNLINK'].sum() +
                                 df_2.groupby('SN CHARGING ACTION')['BYTES UPLINK'].sum())

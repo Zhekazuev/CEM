@@ -20,7 +20,7 @@ def logic(df):
     addresses = df.groupby('P2P PROTOCOL')['SERVER IP ADDRESS'].unique()
 
     # telegram
-    no_messengers = df[df['SN CHARGING ACTION'] != 'Messengers']
+    no_messengers = df[df['SN CHARGING ACTION'] == 'charge-10000']
     df_ipstarts_451 = (no_messengers[no_messengers['SERVER IP ADDRESS'].str.match('^45.1*') == True]
                        .groupby('SN CHARGING ACTION'))
     df_ipstarts_1965 = (no_messengers[no_messengers['SERVER IP ADDRESS'].str.match('^196.5*') == True]
@@ -38,7 +38,7 @@ def logic(df):
 
     # instagram
     instagram_addresses = addresses["instagram"]
-    df_1 = df[df['SN CHARGING ACTION'] != 'Social-net']
+    df_1 = df[df['SN CHARGING ACTION'] == 'charge-10000']
     df_2 = df_1[df_1['SERVER IP ADDRESS'].isin(instagram_addresses)]
     total_instagram_traffic = ((df_2.groupby('SN CHARGING ACTION')['BYTES DOWNLINK'].sum() +
                                 df_2.groupby('SN CHARGING ACTION')['BYTES UPLINK'].sum())
