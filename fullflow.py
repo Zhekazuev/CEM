@@ -10,8 +10,8 @@ def logic(df):
                   .sum().div(1024 ** 2))
     statistics["UPLINK PLUS DOWNLINK"] = statistics["BYTES DOWNLINK"] + statistics["BYTES UPLINK"]
     statistics = (statistics.sort_values('UPLINK PLUS DOWNLINK', ascending=False)
-                  .sort_index(level=0, sort_remaining=False))
-    print("Total statistics:\n", statistics.head(100), end="\n\n\n")
+                  .sort_index(level=0, sort_remaining=False)).head(100)
+    print("Total statistics:\n", statistics, end="\n\n\n")
 
     # get all unique protocols
     protocols = df.get('P2P PROTOCOL').dropna().unique().tolist()
