@@ -41,14 +41,19 @@ def database():
 
     print("Data finish format: 21-08-2020")
     # check data finish
-    data_start = input("Input Data finish here:")
+    data_finish = input("Input Data finish here:")
 
     con = connect(host=config.host,
                   port=config.port,
                   user=config.login,
                   password=config.password)
 
-    query = ""
+    query = f"""SELECT RADIUS_ID, START_TIME, END_TIME, RULEBASE, BYTES_UPLINK, BYTES_DOWNLINK, 
+                SN_CHARGING_ACTION, P2P_PROTOCOL, SERVER_IP_ADDRESS, P2P_TLS_SNI, P2P_TLS_CNAME
+                FROM DPI.FLOW_SHARDED
+                PREWHERE RADIUS_ID = {number}
+                WHERE END_TIME >= toDateTime('{data_start} 00:00:00') and 
+                END_TIME < toDateTime('{data_finish} 23:59:59')"""
     df = pd.read_sql_query(query, con)
 
     return df
