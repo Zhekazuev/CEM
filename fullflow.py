@@ -37,13 +37,16 @@ def logic(df):
     print(f"Total Telegram traffic for return to subscriber: {total_telegram_traffic} MB")
 
     # instagram
-    instagram_addresses = addresses["instagram"]
-    df_1 = df[df['SN CHARGING ACTION'] == 'charge-10000']
-    df_2 = df_1[df_1['SERVER IP ADDRESS'].isin(instagram_addresses)]
-    total_instagram_traffic = ((df_2.groupby('SN CHARGING ACTION')['BYTES DOWNLINK'].sum() +
-                                df_2.groupby('SN CHARGING ACTION')['BYTES UPLINK'].sum())
-                               .sort_values(ascending=False).sum() / 1024 ** 2)
-    print(f"Total Instagram traffic for return to subscriber: {total_instagram_traffic} MB")
+    try:
+        instagram_addresses = addresses["instagram"]
+        df_1 = df[df['SN CHARGING ACTION'] == 'charge-10000']
+        df_2 = df_1[df_1['SERVER IP ADDRESS'].isin(instagram_addresses)]
+        total_instagram_traffic = ((df_2.groupby('SN CHARGING ACTION')['BYTES DOWNLINK'].sum() +
+                                    df_2.groupby('SN CHARGING ACTION')['BYTES UPLINK'].sum())
+                                    .sort_values(ascending=False).sum() / 1024 ** 2)
+        print(f"Total Instagram traffic for return to subscriber: {total_instagram_traffic} MB")
+    except KeyError:
+        total_instagram_traffic = 0
 
     # youtube
     # summary_youtube_traffic =
