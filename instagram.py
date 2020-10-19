@@ -44,6 +44,7 @@ def logic(df):
 
     # get all unique protocols
     protocols = df.get('P2P PROTOCOL').dropna().unique().tolist()
+
     # get all unique addresses
     addresses = df.groupby('P2P PROTOCOL')['SERVER IP ADDRESS'].unique()
     try:
