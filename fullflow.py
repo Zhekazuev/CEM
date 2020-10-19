@@ -5,7 +5,7 @@ import sys
 
 
 def logic(df):
-    pd.options.display.max_rows = 100
+    pd.options.display.max_rows = 150
     # statistics
     statistics = (df.groupby(['SN CHARGING ACTION', 'P2P PROTOCOL'])[["BYTES DOWNLINK", "BYTES UPLINK"]]
                   .sum().div(1024 ** 2))
@@ -13,6 +13,25 @@ def logic(df):
     statistics = (statistics.sort_values('UPLINK PLUS DOWNLINK', ascending=False)
                   .sort_index(level=0, sort_remaining=False))
     print("Total statistics:\n", statistics, end="\n\n\n")
+
+    statistics_by_actions = df.groupby(['SN CHARGING ACTION'])[["BYTES DOWNLINK", "BYTES UPLINK"]].sum().div(1024 ** 2)
+    statistics_by_actions["UPLINK PLUS DOWNLINK"] = (statistics_by_actions["BYTES DOWNLINK"] +
+                                                     statistics_by_actions["BYTES UPLINK"])
+    print("Total statistics group by charging actions:\n", statistics_by_actions)
+    total_uplink_plus_downlink = statistics_by_actions["UPLINK PLUS DOWNLINK"].sum()
+    print("Total usage traffic:", total_uplink_plus_downlink, end="\n\n\n")
+
+    statistics_by_ips = df.groupby(['SN CHARGING ACTION', 'P2P PROTOCOL', 'SERVER IP ADDRESS'])[
+        ["BYTES DOWNLINK", "BYTES UPLINK"]].sum().div(1024 ** 2)
+    statistics_by_ips["UPLINK PLUS DOWNLINK"] = (statistics_by_ips["BYTES DOWNLINK"] +
+                                                 statistics_by_ips["BYTES UPLINK"])
+
+    statistics_by_ips = statistics_by_ips[statistics_by_ips["UPLINK PLUS DOWNLINK"] > 50] \
+        .nlargest(50, columns='UPLINK PLUS DOWNLINK') \
+        .groupby(['SN CHARGING ACTION', 'P2P PROTOCOL', 'SERVER IP ADDRESS']).sum() \
+        .sort_values(['SN CHARGING ACTION', 'P2P PROTOCOL', 'UPLINK PLUS DOWNLINK'], ascending=False) \
+        .sort_index(level=0, sort_remaining=False)
+    print("Top statistics group by charging action, protocol and IP addresses:\n", statistics_by_ips, end="\n\n\n")
 
     # get all unique protocols
     protocols = df.get('P2P PROTOCOL').dropna().unique().tolist()
@@ -43,7 +62,7 @@ def logic(df):
         df_2 = df_1[df_1['SERVER IP ADDRESS'].isin(instagram_addresses)]
         total_instagram_traffic = ((df_2.groupby('SN CHARGING ACTION')['BYTES DOWNLINK'].sum() +
                                     df_2.groupby('SN CHARGING ACTION')['BYTES UPLINK'].sum())
-                                    .sort_values(ascending=False).sum() / 1024 ** 2)
+                                   .sort_values(ascending=False).sum() / 1024 ** 2)
         print(f"Total Instagram traffic for return to subscriber: {total_instagram_traffic} MB")
     except KeyError:
         total_instagram_traffic = 0
